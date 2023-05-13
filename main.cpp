@@ -5,7 +5,7 @@ using namespace std;
 class RubikCube {
     int faces[6][3][3];
 
-    void matrixRotation(int ind) {
+    void matrixRotation(int ind) { // Универсальный поворот матрицы по часовой
         swap(faces[ind][0][1], faces[ind][1][0]);
         swap(faces[ind][0][2], faces[ind][2][0]);
         swap(faces[ind][1][2], faces[ind][2][1]);
@@ -15,7 +15,7 @@ class RubikCube {
         swap(faces[ind][2][0], faces[ind][2][2]);
     }
 public:
-    explicit RubikCube() {
+    explicit RubikCube() { // Цвета глянешь по пикчам, которые кинул
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 3; j++) {
                 for (int k = 0; k < 3; k++) {
@@ -25,6 +25,7 @@ public:
         }
     }
 
+    // Повороты пока все только по часовой (хз, нужны ли против)
     void frontRotation() {
         matrixRotation(0);
         int tmp[3];
@@ -145,7 +146,7 @@ public:
         }
     }
 
-    void print() {
+    void print() { // Выводит в консоль развертку куба
         for (int i = 0; i < 3; i++) {
             cout << "         ";
             for (int j = 0; j < 3; j++) {
