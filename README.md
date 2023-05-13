@@ -1,3 +1,3 @@
 # rubicks-cube
-#Смари
+Смари
 ![Rotations scheme](Scheme.png)
