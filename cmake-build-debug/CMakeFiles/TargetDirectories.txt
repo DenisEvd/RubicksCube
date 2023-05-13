@@ -1,0 +1,3 @@
+C:/Users/den-e/CLionProjects/rubicks-cube/cmake-build-debug/CMakeFiles/rubicks_cube.dir
+C:/Users/den-e/CLionProjects/rubicks-cube/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/den-e/CLionProjects/rubicks-cube/cmake-build-debug/CMakeFiles/rebuild_cache.dir
