@@ -34,7 +34,7 @@ public:
     }
 
     // Повороты пока все только по часовой (хз, нужны ли против)
-    void frontRotation() {
+    void F() {
         matrixRotation(green);
         int tmp[3];
         for (int i = 0; i < 3; i++) {
@@ -54,7 +54,11 @@ public:
         }
     }
 
-    void backRotation() {
+    void Fr() {
+        for (int i = 0; i < 3; i++) F();
+    }
+
+    void B() {
         matrixRotation(blue);
         int tmp[3];
         for (int i = 0; i < 3; i++) {
@@ -74,7 +78,11 @@ public:
         }
     }
 
-    void leftRotation() {
+    void Br() {
+        for (int i = 0; i < 3; i++) B();
+    }
+
+    void L() {
         matrixRotation(orange);
         int tmp[3];
         for (int i = 0; i < 3; i++) {
@@ -94,7 +102,11 @@ public:
         }
     }
 
-    void rightRotation() {
+    void Lr() {
+        for (int i = 0; i < 3; i++) L();
+    }
+
+    void R() {
         matrixRotation(red);
         int tmp[3];
         for (int i = 0; i < 3; i++) {
@@ -114,7 +126,11 @@ public:
         }
     }
 
-    void upRotation() {
+    void Rr() {
+        for (int i = 0; i < 3; i++) R();
+    }
+
+    void U() {
         matrixRotation(yellow);
         int tmp[3];
         for (int i = 0; i < 3; i++) {
@@ -134,7 +150,11 @@ public:
         }
     }
 
-    void downRotation() {
+    void Ur() {
+        for (int i = 0; i < 3; i++) U();
+    }
+
+    void D() {
         matrixRotation(white);
         int tmp[3];
         for (int i = 0; i < 3; i++) {
@@ -152,6 +172,10 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[green][2][i] = tmp[i];
         }
+    }
+
+    void Dr() {
+        for (int i = 0; i < 3; i++) D();
     }
 
     void print() { // Выводит в консоль развертку куба
@@ -189,7 +213,6 @@ public:
 
 int main() {
     RubikCube cube;
-    cube.upRotation();
     cube.print();
 
     return 0;
