@@ -45,30 +45,133 @@ public:
         }
     }
 
+    void backRotation() {
+        matrixRotation(2);
+        int tmp[3];
+        for (int i = 0; i < 3; i++) {
+            tmp[i] = faces[3][i][0];
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[5][2][i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[1][2-i][2]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[4][0][2-i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            faces[3][i][0] = tmp[i];
+        }
+    }
+
+    void leftRotation() {
+        matrixRotation(3);
+        int tmp[3];
+        for (int i = 0; i < 3; i++) {
+            tmp[i] = faces[0][i][0];
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[5][i][0]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[2][2-i][2]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[4][i][0]);
+        }
+        for (int i = 0; i < 3; i++) {
+            faces[0][i][0] = tmp[i];
+        }
+    }
+
+    void rightRotation() {
+        matrixRotation(1);
+        int tmp[3];
+        for (int i = 0; i < 3; i++) {
+            tmp[i] = faces[2][i][0];
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[5][2-i][2]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[0][2-i][2]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[4][2-i][2]);
+        }
+        for (int i = 0; i < 3; i++) {
+            faces[2][i][0] = tmp[i];
+        }
+    }
+
+    void upRotation() {
+        matrixRotation(4);
+        int tmp[3];
+        for (int i = 0; i < 3; i++) {
+            tmp[i] = faces[1][0][2-i];
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[0][0][2-i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[3][0][2-i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[2][0][2-i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            faces[1][0][2-i] = tmp[i];
+        }
+    }
+
+    void downRotation() {
+        matrixRotation(5);
+        int tmp[3];
+        for (int i = 0; i < 3; i++) {
+            tmp[i] = faces[0][2][i];
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[1][2][i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[2][2][i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            swap(tmp[i], faces[3][2][i]);
+        }
+        for (int i = 0; i < 3; i++) {
+            faces[0][2][i] = tmp[i];
+        }
+    }
+
     void print() {
         for (int i = 0; i < 3; i++) {
-            cout << "      ";
+            cout << "         ";
             for (int j = 0; j < 3; j++) {
-                cout << faces[4][i][j] << ' ';
+                cout << faces[4][i][j] << "  ";
             }
             cout << '\n';
         }
 
         for (int k = 0; k < 3; k++) {
             for (int i = -1; i < 3; i++) {
+                cout << '|';
                 for (int j = 0; j < 3; j++) {
                     if (i == -1)
-                        cout << faces[3][k][j] << ' ';
+                        cout << faces[3][k][j];
                     else
-                        cout << faces[i][k][j] << ' ';
+                        cout << faces[i][k][j];
+                    if (j != 2)
+                        cout << "  ";
                 }
-                if (i == 2) cout << '\n';
+                if (i == 2) cout << "|\n";
             }
         }
         for (int i = 0; i < 3; i++) {
-            cout << "      ";
+            cout << "         ";
             for (int j = 0; j < 3; j++) {
-                cout << faces[5][i][j] << ' ';
+                cout << faces[5][i][j] << "  ";
             }
             cout << '\n';
         }
@@ -77,8 +180,8 @@ public:
 
 int main() {
     RubikCube cube;
-    cube.frontRotation();
-    cube.frontRotation();
+    cube.downRotation();
     cube.print();
+
     return 0;
 }
