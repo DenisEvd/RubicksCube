@@ -18,7 +18,6 @@ private:
         white
     };
 
-    // Универсальный поворот матрицы по часовой
     void matrixRotation(int ind) {
         swap(faces[ind][0][1], faces[ind][1][0]);
         swap(faces[ind][0][2], faces[ind][2][0]);
@@ -28,6 +27,107 @@ private:
         swap(faces[ind][1][0], faces[ind][1][2]);
         swap(faces[ind][2][0], faces[ind][2][2]);
     }
+
+    static bool isEdge(int i, int j) {
+        if (i == 1 && (j == 0 || j == 2)) {
+            return true;
+        }
+        if (j == 1 && (i == 0 || i == 2)) {
+            return true;
+        }
+        return false;
+    }
+
+    bool isWhiteEdgesDowned() {
+        if (faces[white][1][0] == white && faces[white][1][2] == white && faces[white][0][1] == white && faces[white][2][1] == white) {
+            return true;
+        }
+        return false;
+    }
+
+    void greenPifPaf() {
+        R();
+        U();
+        Rr();
+        Ur();
+    }
+    void bluePifPaf() {
+        L();
+        Ur();
+        Lr();
+        U();
+    }
+    void redPifPaf() {
+        B();
+        U();
+        Br();
+        Ur();
+    }
+    void orangePifPaf() {
+        F();
+        U();
+        Fr();
+        Ur();
+    }
+    void whitePifPaf() {
+        R();
+        F();
+        Rr();
+        Fr();
+    }
+    void yellowPifPaf() {
+        R();
+        B();
+        Rr();
+        Br();
+    }
+
+    void downingWhiteEdges(const function<void()>& move, const function<void()>& put, int color) {
+        int y = 1, x = 2;
+        if (color == blue) {
+            y = 0;
+            x = 1;
+        } else if (color == red) {
+            y = 2;
+            x = 1;
+        } else if (color == orange) {
+            y = 0;
+            x = 1;
+        }
+        int countWhiteEdges = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (faces[color][i][j] == white && isEdge(i, j)) {
+
+                    countWhiteEdges++;
+                }
+            }
+        }
+
+        while (countWhiteEdges > 0) {
+            for (int i = 0; i < 4; i++) {
+                if (faces[color][1][2] != white) {
+                    move();
+                }
+            }
+            while (faces[white][y][x] == white) {
+                D();
+            }
+            put();
+            countWhiteEdges--;
+        }
+    }
+
+    void solvingWhiteCross() {
+        while (!isWhiteEdgesDowned()) {
+            downingWhiteEdges([this]() {this->U();}, [this]() {this->R();this->R();}, yellow);
+            downingWhiteEdges([this]() {this->F();}, [this]() {this->Rr();}, green);
+            downingWhiteEdges([this]() {this->B();}, [this]() {this->Lr();}, blue);
+            downingWhiteEdges([this]() {this->R();}, [this]() {this->Br();}, red);
+            downingWhiteEdges([this]() {this->L();}, [this]() {this->Fr();}, orange);
+        }
+    }
+
 public:
     explicit RubikCube() {
         for (int i = 0; i < 6; i++) {
@@ -58,7 +158,6 @@ public:
             faces[red][i][0] = tmp[i];
         }
     }
-
     void Fr() {
         for (int i = 0; i < 3; i++) F();
     }
@@ -82,7 +181,6 @@ public:
             faces[orange][i][0] = tmp[i];
         }
     }
-
     void Br() {
         for (int i = 0; i < 3; i++) B();
     }
@@ -106,7 +204,6 @@ public:
             faces[green][i][0] = tmp[i];
         }
     }
-
     void Lr() {
         for (int i = 0; i < 3; i++) L();
     }
@@ -130,7 +227,6 @@ public:
             faces[blue][i][0] = tmp[i];
         }
     }
-
     void Rr() {
         for (int i = 0; i < 3; i++) R();
     }
@@ -154,7 +250,6 @@ public:
             faces[red][0][2-i] = tmp[i];
         }
     }
-
     void Ur() {
         for (int i = 0; i < 3; i++) U();
     }
@@ -178,12 +273,12 @@ public:
             faces[green][2][i] = tmp[i];
         }
     }
-
     void Dr() {
         for (int i = 0; i < 3; i++) D();
     }
 
     void solve() {
+        solvingWhiteCross();
         //TODO: solving white cross
         //TODO: solving white layer
         //TODO: solving second layer
@@ -194,7 +289,21 @@ public:
     }
 
     void randomShuffle() {
-        //TODO: cube random shuffling
+        for (int i = 0; i < 500; i++) {
+            int random = abs(rand() % 12);
+            if (random == 0) R();
+            if (random == 1) Rr();
+            if (random == 2) L();
+            if (random == 3) Lr();
+            if (random == 4) F();
+            if (random == 5) Fr();
+            if (random == 6) B();
+            if (random == 7) Br();
+            if (random == 8) U();
+            if (random == 9) Ur();
+            if (random == 10) D();
+            if (random == 11) Dr();
+        }
     }
 
     void print() { // Выводит в консоль развертку куба
@@ -232,7 +341,11 @@ public:
 
 int main() {
     RubikCube cube;
-    cube.Fr();
+
+    srand(time(NULL));
+    cube.randomShuffle();
+    cube.solve();
     cube.print();
+
     return 0;
 }
