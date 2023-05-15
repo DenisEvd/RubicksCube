@@ -45,6 +45,10 @@ private:
         return false;
     }
 
+//    bool twoCenterConnected() {
+//        bool orangeConnected =
+//    }
+
     void greenPifPaf() {
         R();
         U();
@@ -85,8 +89,8 @@ private:
     void downingWhiteEdges(const function<void()>& move, const function<void()>& put, int color) {
         int y = 1, x = 2;
         if (color == blue) {
-            y = 0;
-            x = 1;
+            y = 1;
+            x = 0;
         } else if (color == red) {
             y = 2;
             x = 1;
@@ -126,6 +130,9 @@ private:
             downingWhiteEdges([this]() {this->R();}, [this]() {this->Br();}, red);
             downingWhiteEdges([this]() {this->L();}, [this]() {this->Fr();}, orange);
         }
+//        while (!twoCenterConnected) {
+//
+//        }
     }
 
 public:
