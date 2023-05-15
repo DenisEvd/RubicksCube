@@ -28,6 +28,8 @@ private:
         swap(faces[ind][2][0], faces[ind][2][2]);
     }
 
+
+    // utils
     static bool isEdge(int i, int j) {
         if (i == 1 && (j == 0 || j == 2)) {
             return true;
@@ -38,17 +40,7 @@ private:
         return false;
     }
 
-    bool isWhiteEdgesDowned() {
-        if (faces[white][1][0] == white && faces[white][1][2] == white && faces[white][0][1] == white && faces[white][2][1] == white) {
-            return true;
-        }
-        return false;
-    }
-
-//    bool twoCenterConnected() {
-//        bool orangeConnected =
-//    }
-
+    // simple algos
     void greenPifPaf() {
         R();
         U();
@@ -86,6 +78,7 @@ private:
         Br();
     }
 
+    // funcs to solve white cross
     void downingWhiteEdges(const function<void()>& move, const function<void()>& put, int color) {
         int y = 1, x = 2;
         if (color == blue) {
@@ -102,7 +95,6 @@ private:
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (faces[color][i][j] == white && isEdge(i, j)) {
-
                     countWhiteEdges++;
                 }
             }
@@ -121,6 +113,26 @@ private:
             countWhiteEdges--;
         }
     }
+    bool isWhiteEdgesDowned() {
+        if (faces[white][1][0] == white && faces[white][1][2] == white && faces[white][0][1] == white && faces[white][2][1] == white) {
+            return true;
+        }
+        return false;
+    }
+    vector<int> twoCenterConnected() {
+        bool oCon = (faces[orange][2][1] == orange);
+        bool gCon = (faces[green][2][1] == green);
+        bool rCon = (faces[red][2][1] == red);
+        bool bCon = (faces[blue][2][1] == blue);
+        bool connected [] = {gCon, rCon, bCon, oCon};
+        vector<int> res;
+        for (int i = 0; i < 4; i++) {
+            if (connected[i]) {
+                res.push_back(i);
+            }
+        }
+        return res;
+    }
 
     void solvingWhiteCross() {
         while (!isWhiteEdgesDowned()) {
@@ -130,9 +142,14 @@ private:
             downingWhiteEdges([this]() {this->R();}, [this]() {this->Br();}, red);
             downingWhiteEdges([this]() {this->L();}, [this]() {this->Fr();}, orange);
         }
-//        while (!twoCenterConnected) {
-//
-//        }
+        while (twoCenterConnected().size() < 2) {
+            D();
+        }
+        if (twoCenterConnected().size() == 2) {
+            //TODO: SWAP EDGES
+            cout << "swap edges";
+        }
+        cout << "cross solved!";
     }
 
 public:
