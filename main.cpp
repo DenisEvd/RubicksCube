@@ -40,6 +40,24 @@ private:
         return false;
     }
 
+    void toFirstTypeWhiteCross() {
+        L();
+        D();
+        Lr();
+        Dr();
+        L();
+        while (twoCenterConnected().size() < 2) {
+            D();
+        }
+    }
+
+    bool checkTwoColors(int v1, int v2, int c1, int c2) {
+        if ((v1 == c1 && v2 == c2) || (v1 == c2 && v2 == c1)) {
+            return true;
+        }
+        return false;
+    }
+
     // simple algos
     void greenPifPaf() {
         R();
@@ -77,6 +95,15 @@ private:
         Rr();
         Br();
     }
+
+    void reversPifPaf() {
+        L();
+        D();
+        Lr();
+        Dr();
+        L();
+    }
+
 
     // funcs to solve white cross
     void downingWhiteEdges(const function<void()>& move, const function<void()>& put, int color) {
@@ -142,14 +169,46 @@ private:
             downingWhiteEdges([this]() {this->R();}, [this]() {this->Br();}, red);
             downingWhiteEdges([this]() {this->L();}, [this]() {this->Fr();}, orange);
         }
+
         while (twoCenterConnected().size() < 2) {
             D();
         }
+
+        auto con = twoCenterConnected();
+
         if (twoCenterConnected().size() == 2) {
-            //TODO: SWAP EDGES
-            cout << "swap edges";
+            // second type
+            if (checkTwoColors(con[0], con[1], green, blue)) {
+                toFirstTypeWhiteCross();
+            }
+            if (checkTwoColors(con[0], con[1], red, orange)) {
+                D();
+                toFirstTypeWhiteCross();
+            }
+
+            con = twoCenterConnected();
+            // first type
+            if (checkTwoColors(con[0], con[1], green, red)) {
+                reversPifPaf();
+            }
+            if (checkTwoColors(con[0], con[1], green, orange)) {
+               D();
+               reversPifPaf();
+               Dr();
+            }
+            if (checkTwoColors(con[0], con[1], orange, blue)) {
+                D();
+                D();
+                reversPifPaf();
+                Dr();
+                Dr();
+            }
+            if (checkTwoColors(con[0], con[1], blue, red)) {
+                Dr();
+                reversPifPaf();
+                D();
+            }
         }
-        cout << "cross solved!";
     }
 
 public:
