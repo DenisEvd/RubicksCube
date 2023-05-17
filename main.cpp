@@ -6,6 +6,7 @@ class RubikCube {
 private:
     // faces [center, cordY (from top to bottom), cordX (from left to right)]
     int faces[6][3][3]{};
+    // moves that solve
 
     // colors
     string outputColors [6] = {"G", "R", "B", "O", "Y", "W"};
@@ -67,9 +68,9 @@ private:
     }
     void bluePifPaf() {
         L();
-        Ur();
-        Lr();
         U();
+        Lr();
+        Ur();
     }
     void redPifPaf() {
         B();
@@ -103,7 +104,6 @@ private:
         Dr();
         L();
     }
-
 
     // funcs to solve white cross
     void downingWhiteEdges(const function<void()>& move, const function<void()>& put, int color) {
@@ -161,6 +161,7 @@ private:
         return res;
     }
 
+    // solving
     void solvingWhiteCross() {
         while (!isWhiteEdgesDowned()) {
             downingWhiteEdges([this]() {this->U();}, [this]() {this->R();this->R();}, yellow);
@@ -210,6 +211,208 @@ private:
             }
         }
     }
+
+    int countTurns(int type, int color) {
+        if (type == 1) { // pos 0, 0
+            switch (color) {
+                case red:
+                    return 0;
+                case blue:
+                    return 1;
+                case orange:
+                    return 2;
+                case green:
+                    return 3;
+            }
+        } else {
+            switch (color) {
+                case red:
+                    return 1;
+                case blue:
+                    return 2;
+                case orange:
+                    return 3;
+                case green:
+                    return 0;
+            }
+        }
+        return -1;
+    }
+
+    void putWhiteCorner() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (faces[yellow][i][j] == white) {
+                    while (faces[yellow][2][2] != white) {
+                        U();
+                    }
+                    int color1 = faces[green][0][2];
+                    int color2 = faces[red][0][0];
+                    if (checkTwoColors(color1, color2, green, orange)) {
+                        U();
+                        orangePifPaf();
+                        orangePifPaf();
+                        orangePifPaf();
+                    }
+                    if (checkTwoColors(color1, color2, green, red)) {
+                        greenPifPaf();
+                        greenPifPaf();
+                        greenPifPaf();
+                    }
+                    if (checkTwoColors(color1, color2, red, blue)) {
+                        Ur();
+                        redPifPaf();
+                        redPifPaf();
+                        redPifPaf();
+                    }
+                    if (checkTwoColors(color1, color2, orange, blue)) {
+                        U();
+                        U();
+                        bluePifPaf();
+                        bluePifPaf();
+                        bluePifPaf();
+                    }
+                }
+            }
+        }
+    }
+    void putUpWhiteCorner() {
+        if (faces[green][2][0] == white) {
+            orangePifPaf();
+            orangePifPaf();
+            orangePifPaf();
+            orangePifPaf();
+            orangePifPaf();
+        } else if (faces[green][2][2] == white) {
+            greenPifPaf();
+        } else if (faces[red][2][0] == white) {
+            greenPifPaf();
+            greenPifPaf();
+            greenPifPaf();
+            greenPifPaf();
+            greenPifPaf();
+        } else if (faces[red][2][2] == white) {
+            redPifPaf();
+        } else if (faces[blue][2][0] == white) {
+            redPifPaf();
+            redPifPaf();
+            redPifPaf();
+            redPifPaf();
+            redPifPaf();
+        } else if (faces[blue][2][2] == white) {
+            bluePifPaf();
+        } else if (faces[orange][2][0] == white) {
+            bluePifPaf();
+            bluePifPaf();
+            bluePifPaf();
+            bluePifPaf();
+            bluePifPaf();
+        } else if (faces[orange][2][2] == white) {
+            orangePifPaf();
+        }
+    }
+    void putWhiteCornerFromThirdLayer() {
+        for (int colorSide = 0; colorSide < 5; colorSide++) {
+            if (faces[colorSide][0][0] == white) {
+                for (int steps = 0; steps < countTurns(1, colorSide); steps++) {
+                    U();
+                }
+                int c1 = faces[yellow][2][2];
+                int c2 = faces[green][0][2];
+                if (checkTwoColors(c1, c2, green, orange)) {
+                    U();
+                    L();
+                    Fr();
+                    Lr();
+                    F();
+                } else if (checkTwoColors(c1, c2, green, red)) {
+                    F();
+                    Rr();
+                    Fr();
+                    R();
+                } else if (checkTwoColors(c1, c2, blue, orange)) {
+                    U();
+                    U();
+                    B();
+                    Lr();
+                    Br();
+                    L();
+                } else if (checkTwoColors(c1, c2, red, blue)) {
+                    Ur();
+                    R();
+                    Br();
+                    Rr();
+                    B();
+                }
+
+            }
+            if (faces[colorSide][0][2] == white) {
+                for (int steps = 0; steps < countTurns(2, colorSide); steps++) {
+                    U();
+                }
+                int c1 = faces[yellow][2][2];
+                int c2 = faces[red][0][0];
+                if (checkTwoColors(c1, c2, green, orange)) {
+                    U();
+                    Fr();
+                    L();
+                    F();
+                    Lr();
+                } else if (checkTwoColors(c1, c2, green, red)) {
+                    Rr();
+                    F();
+                    R();
+                    Fr();
+                } else if (checkTwoColors(c1, c2, blue, orange)) {
+                    U();
+                    U();
+                    Lr();
+                    B();
+                    L();
+                    Br();
+                } else if (checkTwoColors(c1, c2, red, blue)) {
+                    Ur();
+                    Br();
+                    R();
+                    B();
+                    Rr();
+                }
+            }
+        }
+    }
+    void putUpWrongWhiteCorner() {
+        if (faces[white][0][0] == white && (faces[orange][2][2] != orange && faces[green][2][0] != green)) {
+            orangePifPaf();
+        } else if (faces[white][0][2] == white && (faces[green][2][2] != green && faces[red][0][2] != red)) {
+            greenPifPaf();
+        } else if (faces[white][2][2] == white && (faces[red][2][2] != red && faces[blue][0][2] != blue)) {
+            redPifPaf();
+        } else if (faces[white][2][0] == white && (faces[blue][2][2] != blue && faces[orange][0][2] != orange)) {
+            bluePifPaf();
+        }
+    }
+
+    bool firstLayerSolved() {
+        if ((faces[white][0][0] == white) && (faces[white][0][2]) == white && (faces[white][2][0] == white) && faces[white][2][2] == white) {
+            if ((faces[green][2][0] == green) && (faces[green][2][2] == green) && (faces[red][2][0] == red) && (faces[red][2][2] == red) && (faces[blue][2][0] == blue) && (faces[blue][2][2] == blue) && (faces[orange][2][0] == orange) && (faces[orange][2][2] == orange)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    void solvingFirstLayer() {
+        while (!firstLayerSolved()) {
+            putUpWhiteCorner();
+            putWhiteCorner();
+            putWhiteCornerFromThirdLayer();
+            putUpWrongWhiteCorner();
+        }
+    }
+
 
 public:
     explicit RubikCube() {
@@ -362,7 +565,7 @@ public:
 
     void solve() {
         solvingWhiteCross();
-        //TODO: solving white cross
+        solvingFirstLayer();
         //TODO: solving white layer
         //TODO: solving second layer
         //TODO: solving yellow cross
@@ -372,7 +575,7 @@ public:
     }
 
     void randomShuffle() {
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 43; i++) {
             int random = abs(rand() % 12);
             if (random == 0) R();
             if (random == 1) Rr();
@@ -424,7 +627,6 @@ public:
 
 int main() {
     RubikCube cube;
-
     srand(time(NULL));
     cube.randomShuffle();
     cube.solve();
