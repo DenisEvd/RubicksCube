@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <fstream>
 
 using namespace std;
 
@@ -406,7 +407,6 @@ private:
             bluePifPaf();
         }
     }
-
     bool firstLayerSolved() {
         if ((faces[white][0][0] == white) && (faces[white][0][2]) == white && (faces[white][2][0] == white) && faces[white][2][2] == white) {
             if ((faces[green][2][0] == green) && (faces[green][2][2] == green) && (faces[red][2][0] == red) && (faces[red][2][2] == red) && (faces[blue][2][0] == blue) && (faces[blue][2][2] == blue) && (faces[orange][2][0] == orange) && (faces[orange][2][2] == orange)) {
@@ -897,14 +897,35 @@ public:
         }
         cout << '\n';
     }
+
+    void readFromFile(const string& fileName) {
+        ifstream file;
+        file.open(fileName);
+        std::string line;
+        if (file.is_open()) {
+            int color = 0;
+            int row = -1;
+            while (std::getline(file, line)) {
+                if (line == "---") {
+                    continue;
+                } else {
+                    row += 1;
+                    for (int i = 0; i < line.length(); i++) {
+                        faces[color][row][i] = line[i] - '0';
+                    }
+                    if (row == 2) {
+                        row = -1;
+                        color++;
+                    }
+                }
+
+            }
+        }
+    }
 };
 
 int main() {
     RubikCube cube;
-    srand(time(nullptr));
-    cube.randomShuffle();
-    cube.solve();
     cube.print();
-
     return 0;
 }
