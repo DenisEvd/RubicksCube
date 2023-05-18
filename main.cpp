@@ -433,6 +433,7 @@ private:
 
     void solvingFirstLayer() {
         while (!firstLayerSolved()) {
+            print();
             putUpWhiteCorner();
             putWhiteCorner();
             putWhiteCornerFromThirdLayer();
@@ -615,32 +616,70 @@ private:
         while (twoCenterConnectedYellowSide().size() < 2) {
             U();
         }
-
-        auto con = twoCenterConnectedYellowSide();
+        auto conn2 = twoCenterConnectedYellowSide();
 
         if (twoCenterConnectedYellowSide().size() == 2) {
             // second type
-            if (checkTwoColors(con[0], con[1], green, blue) || checkTwoColors(con[0], con[1], red, orange)) {
+            if (checkTwoColors(conn2[0], conn2[1], green, blue)) {
+                yellowCrossPifPaf();
+            }
+            if (checkTwoColors(conn2[0], conn2[1], red, orange)) {
+                yellowCrossPifPaf();
+            }
+            while (twoCenterConnectedYellowSide().size() < 2) {
+                U();
+            }
+            auto conn = twoCenterConnectedYellowSide();
+            // first type
+            if (checkTwoColors(conn[0], conn[1], green, red)) {
+                U();
+                U();
                 yellowCrossPifPaf();
             }
 
-            con = twoCenterConnectedYellowSide();
-            // first type
-            if (checkTwoColors(con[0], con[1], green, red)) {
-                U();
+            if (checkTwoColors(conn[0], conn[1], green, orange)) {
                 U();
                 yellowCrossPifPaf();
             }
-            if (checkTwoColors(con[0], con[1], green, orange)) {
-                U();
+
+            if (checkTwoColors(conn[0], conn[1], orange, blue)) {
                 yellowCrossPifPaf();
             }
-            if (checkTwoColors(con[0], con[1], orange, blue)) {
-                yellowCrossPifPaf();
-            }
-            if (checkTwoColors(con[0], con[1], blue, red)) {
+
+            if (checkTwoColors(conn[0], conn[1], blue, red)) {
                 Ur();
                 yellowCrossPifPaf();
+            }
+        }
+        while (twoCenterConnectedYellowSide().size() != 4) {
+            U();
+        }
+    }
+
+    void reversePifPafGreen() {
+        L();
+        D();
+        Lr();
+        Dr();
+    }
+
+    bool isYellowCornersSolved() {
+        if (faces[yellow][0][0] == yellow && faces[yellow][0][2] == yellow && faces[yellow][2][0] == yellow && faces[yellow][2][2] == yellow) {
+            return true;
+        }
+        return false;
+    }
+
+    void reverseYellowCorners() {
+        while (!isYellowCornersSolved()) {
+            while (faces[yellow][2][0] != yellow) {
+                reversePifPafGreen();
+            }
+            if (isYellowCornersSolved()) {
+                break;
+            }
+            while (faces[yellow][2][0] == yellow) {
+                Ur();
             }
         }
         while (twoCenterConnectedYellowSide().size() != 4) {
@@ -800,13 +839,16 @@ public:
     }
 
     void solve() {
+        cout << "solving white cross\n";
         solvingWhiteCross();
+        cout << "solving first layer\n";
         solvingFirstLayer();
+        cout << "solving second layer\n";
         solvingSecondLayer();
+        cout << "solving yellow cross\n";
         solvingYellowCross();
-        //TODO: placing one yellow corner
-        //TODO: placing three others corners
-        //TODO: flipping yellow corners
+        cout << "solving yellow corners\n";
+        reverseYellowCorners();
     }
 
     void randomShuffle() {
@@ -857,11 +899,16 @@ public:
 int main() {
     RubikCube cube;
     srand(time(NULL));
-    cube.randomShuffle();
-    cube.print();
-    cout << '\n';
-    cube.solve();
-    cube.print();
+    for (int i = 0; i < 1000000; i++) {
+        cube.randomShuffle();
+        cube.solve();
+        cube.print();
+    }
+
+
+//    cout << '\n';
+//
+//    cube.print();
 
     return 0;
 }
