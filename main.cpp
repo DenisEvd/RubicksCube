@@ -686,6 +686,85 @@ private:
         }
     }
 
+    bool yellowCornersOnRightPlaces() {
+        return faces[green][0][2] == green && faces[yellow][2][2] == yellow && faces[red][0][0] == red && faces[red][0][2] == red && faces[yellow][0][2] == yellow && faces[blue][0][0] == blue &&
+               faces[blue][0][2] == blue && faces[yellow][0][0] == yellow && faces[orange][0][0] == orange && faces[orange][0][2] == orange && faces[yellow][2][0] == yellow && faces[green][0][0] == green;
+    }
+
+    void permutationYellowCorners() {
+        while (!yellowCornersOnRightPlaces()) {
+            if (faces[green][0][2] == green && faces[yellow][2][2] == yellow && faces[red][0][0] == red) {
+                L();
+                L();
+                D();
+                L();
+                L();
+                Dr();
+                B();
+                B();
+                L();
+                L();
+                Ur();
+                L();
+                L();
+                U();
+                B();
+                B();
+            } else if (faces[red][0][2] == red && faces[yellow][0][2] == yellow && faces[blue][0][0] == blue) {
+                F();
+                F();
+                D();
+                F();
+                F();
+                Dr();
+                L();
+                L();
+                F();
+                F();
+                Ur();
+                F();
+                F();
+                U();
+                L();
+                L();
+            } else if (faces[blue][0][2] == blue && faces[yellow][0][0] == yellow && faces[orange][0][0] == orange) {
+                R();
+                R();
+                D();
+                R();
+                R();
+                Dr();
+                F();
+                F();
+                R();
+                R();
+                Ur();
+                R();
+                R();
+                U();
+                F();
+                F();
+            } else {
+                B();
+                B();
+                D();
+                B();
+                B();
+                Dr();
+                R();
+                R();
+                B();
+                B();
+                Ur();
+                B();
+                B();
+                U();
+                R();
+                R();
+            }
+        }
+    }
+
 
 
 public:
@@ -848,6 +927,7 @@ public:
         solvingYellowCross();
 //        cout << "solving yellow corners\n";
         reverseYellowCorners();
+        permutationYellowCorners();
     }
 
     void randomShuffle() {
@@ -899,15 +979,9 @@ public:
 int main() {
     RubikCube cube;
     srand(time(NULL));
-    for (int i = 0; i < 1000000; i++) {
-        cube.randomShuffle();
-        cube.solve();
-    }
-
-
-//    cout << '\n';
-//
-//    cube.print();
+    cube.randomShuffle();
+    cube.solve();
+    cube.print();
 
     return 0;
 }
