@@ -352,7 +352,7 @@ private:
                     Fr();
                     Lr();
                     F();
-                } else if (checkTwoColors(c1, c2, green, red)) {
+                } else if (checkTwoColors(c1, c2, red, green)) {
                     F();
                     Rr();
                     Fr();
@@ -408,13 +408,13 @@ private:
         }
     }
     void putUpWrongWhiteCorner() {
-        if (faces[white][0][0] == white && (faces[orange][2][2] != orange && faces[green][2][0] != green)) {
+        if (!(faces[white][0][0] == white && faces[orange][2][2] == orange && faces[green][2][0] == green)) {
             orangePifPaf();
-        } else if (faces[white][0][2] == white && (faces[green][2][2] != green && faces[red][0][2] != red)) {
+        } else if (!(faces[white][0][2] == white && faces[green][2][2] == green && faces[red][2][0] == red)) {
             greenPifPaf();
-        } else if (faces[white][2][2] == white && (faces[red][2][2] != red && faces[blue][0][2] != blue)) {
+        } else if (!(faces[white][2][2] == white && faces[red][2][2] == red && faces[blue][2][0] == blue)) {
             redPifPaf();
-        } else if (faces[white][2][0] == white && (faces[blue][2][2] != blue && faces[orange][0][2] != orange)) {
+        } else if (!(faces[white][2][0] == white && faces[blue][2][2] == blue || faces[orange][2][0] == orange)) {
             bluePifPaf();
         }
     }
@@ -433,11 +433,10 @@ private:
 
     void solvingFirstLayer() {
         while (!firstLayerSolved()) {
-            print();
+            putUpWrongWhiteCorner();
             putUpWhiteCorner();
             putWhiteCorner();
             putWhiteCornerFromThirdLayer();
-            putUpWrongWhiteCorner();
         }
     }
 
@@ -839,15 +838,15 @@ public:
     }
 
     void solve() {
-        cout << "solving white cross\n";
+//        cout << "solving white cross\n";
         solvingWhiteCross();
-        cout << "solving first layer\n";
+//        cout << "solving first layer\n";
         solvingFirstLayer();
-        cout << "solving second layer\n";
+//        cout << "solving second layer\n";
         solvingSecondLayer();
-        cout << "solving yellow cross\n";
+//        cout << "solving yellow cross\n";
         solvingYellowCross();
-        cout << "solving yellow corners\n";
+//        cout << "solving yellow corners\n";
         reverseYellowCorners();
     }
 
@@ -893,6 +892,7 @@ public:
             }
             cout << '\n';
         }
+        cout << '\n';
     }
 };
 
@@ -902,7 +902,6 @@ int main() {
     for (int i = 0; i < 1000000; i++) {
         cube.randomShuffle();
         cube.solve();
-        cube.print();
     }
 
 
