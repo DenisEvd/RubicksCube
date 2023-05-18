@@ -11,7 +11,7 @@ private:
     // moves that solve
 
     // colors
-    string outputColors [6] = {"G", "R", "B", "O", "Y", "W"};
+    const string outputColors [6] = {"G", "O", "B", "R", "Y", "W"};
     enum Colors {
         green,
         red,
@@ -54,14 +54,14 @@ private:
         }
     }
 
-    bool checkTwoColors(int v1, int v2, int c1, int c2) {
+    static bool checkTwoColors(int v1, int v2, int c1, int c2) {
         if ((v1 == c1 && v2 == c2) || (v1 == c2 && v2 == c1)) {
             return true;
         }
         return false;
     }
 
-    // simple algos
+    // simple algo
     void greenPifPaf() {
         R();
         U();
@@ -110,18 +110,6 @@ private:
         Ur();
         B();
         U();
-    }
-    void whitePifPaf() {
-        R();
-        F();
-        Rr();
-        Fr();
-    }
-    void yellowPifPaf() {
-        R();
-        B();
-        Rr();
-        Br();
     }
 
     void reversPifPaf() {
@@ -694,73 +682,13 @@ private:
     void permutationYellowCorners() {
         while (!yellowCornersOnRightPlaces()) {
             if (faces[green][0][2] == green && faces[yellow][2][2] == yellow && faces[red][0][0] == red) {
-                L();
-                L();
-                D();
-                L();
-                L();
-                Dr();
-                B();
-                B();
-                L();
-                L();
-                Ur();
-                L();
-                L();
-                U();
-                B();
-                B();
+                L(); L(); D(); L(); L(); Dr(); B(); B(); L(); L(); Ur(); L(); L(); U(); B(); B();
             } else if (faces[red][0][2] == red && faces[yellow][0][2] == yellow && faces[blue][0][0] == blue) {
-                F();
-                F();
-                D();
-                F();
-                F();
-                Dr();
-                L();
-                L();
-                F();
-                F();
-                Ur();
-                F();
-                F();
-                U();
-                L();
-                L();
+                F(); F(); D(); F(); F(); Dr(); L(); L(); F(); F(); Ur(); F(); F(); U(); L(); L();
             } else if (faces[blue][0][2] == blue && faces[yellow][0][0] == yellow && faces[orange][0][0] == orange) {
-                R();
-                R();
-                D();
-                R();
-                R();
-                Dr();
-                F();
-                F();
-                R();
-                R();
-                Ur();
-                R();
-                R();
-                U();
-                F();
-                F();
+                R(); R(); D(); R(); R(); Dr(); F(); F(); R(); R(); Ur(); R(); R(); U(); F(); F();
             } else {
-                B();
-                B();
-                D();
-                B();
-                B();
-                Dr();
-                R();
-                R();
-                B();
-                B();
-                Ur();
-                B();
-                B();
-                U();
-                R();
-                R();
+                B(); B(); D(); B(); B(); Dr(); R(); R(); B(); B(); Ur(); B(); B(); U(); R(); R();
             }
         }
     }
@@ -917,15 +845,10 @@ public:
     }
 
     void solve() {
-//        cout << "solving white cross\n";
         solvingWhiteCross();
-//        cout << "solving first layer\n";
         solvingFirstLayer();
-//        cout << "solving second layer\n";
         solvingSecondLayer();
-//        cout << "solving yellow cross\n";
         solvingYellowCross();
-//        cout << "solving yellow corners\n";
         reverseYellowCorners();
         permutationYellowCorners();
     }
@@ -942,7 +865,7 @@ public:
         }
     }
 
-    void print() { // Выводит в консоль развертку куба
+    void print() { // output unwrapped cube in console
         for (int i = 0; i < 3; i++) {
             cout << "         ";
             for (int j = 0; j < 3; j++) {
@@ -978,7 +901,7 @@ public:
 
 int main() {
     RubikCube cube;
-    srand(time(NULL));
+    srand(time(nullptr));
     cube.randomShuffle();
     cube.solve();
     cube.print();
