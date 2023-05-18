@@ -126,6 +126,23 @@ private:
         L();
     }
 
+    static int colorToInt(char color) {
+        switch (color) {
+            case 'G':
+                return 0;
+            case 'O':
+                return 1;
+            case 'B':
+                return 2;
+            case 'R':
+                return 3;
+            case 'Y':
+                return 4;
+            default:
+                return 5;
+        }
+    }
+
     // funcs to solve white cross
     void downingWhiteEdges(const function<void()>& move, const function<void()>& put, int color) {
         int y = 1, x = 2;
@@ -956,7 +973,7 @@ public:
                 } else {
                     row += 1;
                     for (int i = 0; i < line.length(); i++) {
-                        faces[color][row][i] = line[i] - '0';
+                        faces[color][row][i] = colorToInt(line[i]);
                     }
                     if (row == 2) {
                         row = -1;
@@ -967,14 +984,21 @@ public:
             }
         }
     }
+
+    void writeInFile(const string& filename) {
+        ifstream file;
+        file.open(filename);
+    }
 };
 
 int main() {
     RubikCube cube;
     srand(time(nullptr));
-    cube.randomShuffle();
-    cube.solve();
-    cube.printRotations();
+    cube.readFromFile("input.txt");
+    cube.printCube();
+//    cube.randomShuffle();
+//    cube.solve();
+//    cube.printRotations();
 
     return 0;
 }
