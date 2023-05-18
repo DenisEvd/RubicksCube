@@ -12,7 +12,9 @@ private:
     // moves that solve
 
     //course of the decision
-    vector<char> rotationHistory;
+    const string outputRotations [12] = {"F", "F'", "B", "B'", "L", "L'", "R", "R'", "U", "U'", "D", "D'"};
+    vector<int> rotationHistory;
+    bool canWriteRotations = true;
 
     // colors
     const string outputColors [6] = {"G", "O", "B", "R", "Y", "W"};
@@ -726,10 +728,15 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[red][i][0] = tmp[i];
         }
-        rotationHistory.push_back('F');
+        if (canWriteRotations)
+            rotationHistory.push_back(0);
     }
     void Fr() {
+        canWriteRotations = false;
         for (int i = 0; i < 3; i++) F();
+        canWriteRotations = true;
+        rotationHistory.push_back(1);
+
     }
 
     void B() {
@@ -750,10 +757,14 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[orange][i][0] = tmp[i];
         }
-        rotationHistory.push_back('B');
+        if (canWriteRotations)
+            rotationHistory.push_back(2);
     }
     void Br() {
+        canWriteRotations = false;
         for (int i = 0; i < 3; i++) B();
+        canWriteRotations = true;
+        rotationHistory.push_back(3);
     }
 
     void L() {
@@ -774,10 +785,14 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[green][i][0] = tmp[i];
         }
-        rotationHistory.push_back('L');
+        if (canWriteRotations)
+            rotationHistory.push_back(4);
     }
     void Lr() {
+        canWriteRotations = false;
         for (int i = 0; i < 3; i++) L();
+        canWriteRotations = true;
+        rotationHistory.push_back(5);
     }
 
     void R() {
@@ -798,10 +813,14 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[blue][i][0] = tmp[i];
         }
-        rotationHistory.push_back('R');
+        if (canWriteRotations)
+            rotationHistory.push_back(6);
     }
     void Rr() {
+        canWriteRotations = false;
         for (int i = 0; i < 3; i++) R();
+        canWriteRotations = true;
+        rotationHistory.push_back(7);
     }
 
     void U() {
@@ -822,10 +841,14 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[red][0][2-i] = tmp[i];
         }
-        rotationHistory.push_back('U');
+        if (canWriteRotations)
+            rotationHistory.push_back(8);
     }
     void Ur() {
+        canWriteRotations = false;
         for (int i = 0; i < 3; i++) U();
+        canWriteRotations = true;
+        rotationHistory.push_back(9);
     }
 
     void D() {
@@ -846,10 +869,14 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[green][2][i] = tmp[i];
         }
-        rotationHistory.push_back('D');
+        if (canWriteRotations)
+            rotationHistory.push_back(10);
     }
     void Dr() {
+        canWriteRotations = false;
         for (int i = 0; i < 3; i++) D();
+        canWriteRotations = true;
+        rotationHistory.push_back(11);
     }
 
     void solve() {
@@ -874,7 +901,7 @@ public:
         }
     }
 
-    void print() { // output unwrapped cube in console
+    void printCube() { // output unwrapped cube in console
         for (int i = 0; i < 3; i++) {
             cout << "         ";
             for (int j = 0; j < 3; j++) {
@@ -903,6 +930,15 @@ public:
                 cout << outputColors[faces[white][i][j]] << "  ";
             }
             cout << '\n';
+        }
+        cout << '\n';
+    }
+
+    void printRotations() {
+        for (int i = 0; i < rotationHistory.size(); i++) {
+            if (i % 10 == 0)
+                cout << '\n';
+            cout << outputRotations[rotationHistory[i]] << ' ';
         }
         cout << '\n';
     }
@@ -938,6 +974,7 @@ int main() {
     srand(time(nullptr));
     cube.randomShuffle();
     cube.solve();
+    cube.printRotations();
 
     return 0;
 }
