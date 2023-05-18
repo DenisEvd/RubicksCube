@@ -261,6 +261,8 @@ private:
                     return 2;
                 case green:
                     return 3;
+                default:
+                    return 0;
             }
         } else {
             switch (color) {
@@ -270,7 +272,7 @@ private:
                     return 2;
                 case orange:
                     return 3;
-                case green:
+                default:
                     return 0;
             }
         }
@@ -989,11 +991,11 @@ public:
         ofstream file;
         file.open(filename);
         if (file.is_open()) {
-            for (int color = 0; color < 6; color++) {
+            for (auto color: faces) {
                 file << "---\n";
                 for (int i = 0; i < 3; i++) {
                     for (int j = 0; j < 3; j++) {
-                        file << outputColors[faces[color][i][j]];
+                        file << outputColors[color[i][j]];
                     }
                     file << '\n';
                 }
