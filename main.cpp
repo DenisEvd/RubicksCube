@@ -953,11 +953,10 @@ public:
 
     void printRotations() {
         for (int i = 0; i < rotationHistory.size(); i++) {
-            if (i % 10 == 0)
+            if (i % 10 == 9)
                 cout << '\n';
             cout << outputRotations[rotationHistory[i]] << ' ';
         }
-        cout << '\n';
     }
 
     void readFromFile(const string& fileName) {
@@ -983,22 +982,35 @@ public:
 
             }
         }
+        file.close();
     }
 
     void writeInFile(const string& filename) {
-        ifstream file;
+        ofstream file;
         file.open(filename);
+        if (file.is_open()) {
+            for (int color = 0; color < 6; color++) {
+                file << "---\n";
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        file << outputColors[faces[color][i][j]];
+                    }
+                    file << '\n';
+                }
+            }
+            file << "---\n";
+        }
+        file.close();
     }
 };
 
 int main() {
     RubikCube cube;
     srand(time(nullptr));
-    cube.readFromFile("input.txt");
+    cube.randomShuffle();
+    cube.solve();
     cube.printCube();
-//    cube.randomShuffle();
-//    cube.solve();
-//    cube.printRotations();
+    cube.printRotations();
 
     return 0;
 }
