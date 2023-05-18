@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <functional>
 
 using namespace std;
 
@@ -66,11 +68,24 @@ private:
         Rr();
         Ur();
     }
+    void greenLeftPifPaf() {
+        Lr();
+        Ur();
+        L();
+        U();
+    }
+
     void bluePifPaf() {
         L();
         U();
         Lr();
         Ur();
+    }
+    void blueLeftPifPaf() {
+        Rr();
+        Ur();
+        R();
+        U();
     }
     void redPifPaf() {
         B();
@@ -78,11 +93,23 @@ private:
         Br();
         Ur();
     }
+    void redLeftPifPaf() {
+        Fr();
+        Ur();
+        F();
+        U();
+    }
     void orangePifPaf() {
         F();
         U();
         Fr();
         Ur();
+    }
+    void orangeLeftPifPaf() {
+        Br();
+        Ur();
+        B();
+        U();
     }
     void whitePifPaf() {
         R();
@@ -413,6 +440,126 @@ private:
         }
     }
 
+    void downEdgeToSecondLayer() {
+        for (int i = 0; i < 4; i++) {
+            //find for green
+            if ((faces[yellow][0][1] == orange || faces[yellow][0][1] == red) && faces[blue][0][1] == green) {
+                U();
+                U();
+            } else if ((faces[yellow][1][2] == orange || faces[yellow][1][2] == red) && faces[red][0][1] == green) {
+                U();
+            } else if ((faces[yellow][1][0] == orange || faces[yellow][1][0] == red) && faces[orange][0][1] == green) {
+                Ur();
+            }
+            if (faces[yellow][2][1] == orange && faces[green][0][1] == green) {
+                Ur();
+                greenLeftPifPaf();
+                orangePifPaf();
+            } else if (faces[yellow][2][1] == red && faces[green][0][1] == green) {
+                U();
+                greenPifPaf();
+                redLeftPifPaf();
+            }
+
+            //find for red
+            if ((faces[yellow][1][0] == green || faces[yellow][1][0] == blue) && faces[orange][0][1] == red) {
+                U();
+                U();
+            } else if ((faces[yellow][0][1] == green || faces[yellow][0][1] == blue) && faces[blue][0][1] == red) {
+                U();
+            } else if ((faces[yellow][2][1] == green || faces[yellow][2][1] == blue) && faces[green][0][1] == red) {
+                Ur();
+            }
+            if (faces[yellow][1][2] == green && faces[red][0][1] == red) {
+                Ur();
+                redLeftPifPaf();
+                greenPifPaf();
+            } else if (faces[yellow][1][2] == blue && faces[red][0][1] == red) {
+                U();
+                redPifPaf();
+                blueLeftPifPaf();
+            }
+
+            //find for blue
+            if ((faces[yellow][2][1] == red || faces[yellow][2][1] == orange) && faces[green][0][1] == blue) {
+                U();
+                U();
+            } else if ((faces[yellow][1][0] == red || faces[yellow][1][0] == orange) && faces[orange][0][1] == blue) {
+                U();
+            } else if ((faces[yellow][1][2] == red || faces[yellow][1][2] == orange) && faces[red][0][1] == blue) {
+                Ur();
+            }
+            if (faces[yellow][0][1] == red && faces[blue][0][1] == blue) {
+                Ur();
+                blueLeftPifPaf();
+                redPifPaf();
+            } else if (faces[yellow][0][1] == orange && faces[blue][0][1] == blue) {
+                U();
+                bluePifPaf();
+                orangeLeftPifPaf();
+            }
+
+            // find for orange
+            if ((faces[yellow][1][2] == blue || faces[yellow][1][2] == green) && faces[red][0][1] == orange) {
+                U();
+                U();
+            } else if ((faces[yellow][2][1] == blue || faces[yellow][2][1] == green) && faces[green][0][1] == orange) {
+                U();
+            } else if ((faces[yellow][0][1] == blue || faces[yellow][0][1] == green) && faces[blue][0][1] == orange) {
+                Ur();
+            }
+            if (faces[yellow][1][0] == blue && faces[orange][0][1] == orange) {
+                Ur();
+                orangeLeftPifPaf();
+                bluePifPaf();
+            } else if (faces[yellow][1][0] == green && faces[orange][0][1] == orange) {
+                U();
+                orangePifPaf();
+                greenLeftPifPaf();
+            }
+        }
+    }
+
+    void upWrongEdgeOnSecondLayer() {
+        if (edgeNotExistYellow(faces[green][1][2], faces[red][1][0]) && (faces[green][1][2] != green || faces[red][1][0] != red)) {
+            U();
+            greenPifPaf();
+            redLeftPifPaf();
+        }
+        if (edgeNotExistYellow(faces[red][1][2], faces[blue][1][0]) && (faces[red][1][2] != red || faces[blue][1][0] != blue)) {
+            U();
+            redPifPaf();
+            blueLeftPifPaf();
+        }
+        if (edgeNotExistYellow(faces[blue][1][2], faces[orange][1][0]) && (faces[blue][1][2] != blue || faces[orange][1][0] != orange)) {
+            U();
+            bluePifPaf();
+            orangeLeftPifPaf();
+        }
+        if (edgeNotExistYellow(faces[orange][1][2], faces[green][1][0]) && (faces[orange][1][2] != orange || faces[green][1][0] != green)) {
+            U();
+            orangePifPaf();
+            greenLeftPifPaf();
+        }
+    }
+
+    bool secondLayerIsSolved() {
+        return faces[green][1][2] == green && faces[red][1][0] == red && faces[red][1][2] == red && faces[blue][1][0] == blue
+               && faces[blue][1][2] == blue && faces[orange][1][0] == orange && faces[orange][1][2] == orange && faces[green][1][0] == green;
+    }
+
+    bool edgeNotExistYellow(int c1, int c2) {
+        return c1 != yellow && c2 != yellow;
+    }
+
+    void solvingSecondLayer() {
+        while (!secondLayerIsSolved()) {
+            downEdgeToSecondLayer();
+            upWrongEdgeOnSecondLayer();
+        }
+    }
+
+
 
 public:
     explicit RubikCube() {
@@ -566,6 +713,7 @@ public:
     void solve() {
         solvingWhiteCross();
         solvingFirstLayer();
+        solvingSecondLayer();
         //TODO: solving white layer
         //TODO: solving second layer
         //TODO: solving yellow cross
@@ -575,20 +723,14 @@ public:
     }
 
     void randomShuffle() {
-        for (int i = 0; i < 43; i++) {
-            int random = abs(rand() % 12);
+        for (int i = 0; i < 50; i++) {
+            int random = abs(rand() % 6);
             if (random == 0) R();
-            if (random == 1) Rr();
-            if (random == 2) L();
-            if (random == 3) Lr();
-            if (random == 4) F();
-            if (random == 5) Fr();
-            if (random == 6) B();
-            if (random == 7) Br();
-            if (random == 8) U();
-            if (random == 9) Ur();
-            if (random == 10) D();
-            if (random == 11) Dr();
+            if (random == 1) L();
+            if (random == 2) F();
+            if (random == 3) B();
+            if (random == 4) U();
+            if (random == 5) D();
         }
     }
 
