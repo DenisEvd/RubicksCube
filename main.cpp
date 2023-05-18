@@ -10,6 +10,9 @@ private:
     int faces[6][3][3]{};
     // moves that solve
 
+    //course of the decision
+    vector<char> rotationHistory;
+
     // colors
     const string outputColors [6] = {"G", "O", "B", "R", "Y", "W"};
     enum Colors {
@@ -694,7 +697,6 @@ private:
     }
 
 
-
 public:
     explicit RubikCube() {
         for (int i = 0; i < 6; i++) {
@@ -724,6 +726,7 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[red][i][0] = tmp[i];
         }
+        rotationHistory.push_back('F');
     }
     void Fr() {
         for (int i = 0; i < 3; i++) F();
@@ -747,6 +750,7 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[orange][i][0] = tmp[i];
         }
+        rotationHistory.push_back('B');
     }
     void Br() {
         for (int i = 0; i < 3; i++) B();
@@ -770,6 +774,7 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[green][i][0] = tmp[i];
         }
+        rotationHistory.push_back('L');
     }
     void Lr() {
         for (int i = 0; i < 3; i++) L();
@@ -793,6 +798,7 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[blue][i][0] = tmp[i];
         }
+        rotationHistory.push_back('R');
     }
     void Rr() {
         for (int i = 0; i < 3; i++) R();
@@ -816,6 +822,7 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[red][0][2-i] = tmp[i];
         }
+        rotationHistory.push_back('U');
     }
     void Ur() {
         for (int i = 0; i < 3; i++) U();
@@ -839,6 +846,7 @@ public:
         for (int i = 0; i < 3; i++) {
             faces[green][2][i] = tmp[i];
         }
+        rotationHistory.push_back('D');
     }
     void Dr() {
         for (int i = 0; i < 3; i++) D();
@@ -854,6 +862,7 @@ public:
     }
 
     void randomShuffle() {
+        rotationHistory.clear();
         for (int i = 0; i < 50; i++) {
             int random = abs(rand() % 6);
             if (random == 0) R();
@@ -904,7 +913,6 @@ int main() {
     srand(time(nullptr));
     cube.randomShuffle();
     cube.solve();
-    cube.print();
 
     return 0;
 }
