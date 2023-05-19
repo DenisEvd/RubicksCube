@@ -1010,6 +1010,7 @@ int main() {
     RubikCube cube;
     srand(time(nullptr));
     cube.randomShuffle();
+    cube.writeInFile("input.txt");
     cube.solve();
     cube.printCube();
     cube.printRotations();
