@@ -6,5 +6,6 @@ C++ application, that performs this functions:
 4. Output rotations history in standard output flow
 5. Output cube condition in standad uotput flow
 6. Check is cube valid or not
-\n Schema
+   
+Schema
 ![Rotations scheme](Scheme.png)
